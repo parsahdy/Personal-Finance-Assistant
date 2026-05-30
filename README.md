@@ -1,2 +1,2 @@
 # Django-FinaceManagement
-Personal finace assistant and advisor with Django
+Personal finance assistant and advisor with Django
