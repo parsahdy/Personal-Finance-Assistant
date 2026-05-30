@@ -1,2 +1,2 @@
 # Django-FinaceManagement
-A FinanceManagement APP with Django
+Personal finance assistant and advisor with Django
