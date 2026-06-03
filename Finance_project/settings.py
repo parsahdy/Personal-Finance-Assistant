@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'finance',
 
     'rest_framework',
+    'rest_framework_simplejwt',
 ]
 
 MIDDLEWARE = [
@@ -88,6 +89,9 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+# Custom User
+AUTH_USER_MODEL = "accounts.User"
+
 # Internationalization
 LANGUAGE_CODE = 'en-us'
 
@@ -100,3 +104,9 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = 'static/'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
