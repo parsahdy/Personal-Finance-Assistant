@@ -4,8 +4,6 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# Quick-start development settings - unsuitable for production
-
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-$-i(9@6t2s#c2hs%@*ghh8r3y9ua6-$k87docu=7(5$4@ngsb#'
 
@@ -91,6 +89,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Custom User
 AUTH_USER_MODEL = "accounts.User"
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Internationalization
 LANGUAGE_CODE = 'en-us'
