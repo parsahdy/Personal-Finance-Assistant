@@ -4,6 +4,8 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from django.shortcuts import get_object_or_404
 
+from .services.dashboard import DashboardService
+from .services.reports import ReportService
 from .models import Income, Expense
 from .serializers import IncomeSerializer, IncomeDetailSerializer, ExpenseSerializer, ExpenseDetailSerializer
 
@@ -144,3 +146,40 @@ class DeleteExpense(APIView):
         expense = get_object_or_404(Expense, user=request.user, pk=pk)
         expense.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+
+class DashboardServices(APIView): 
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+
+        year = request.query_params.get("year")
+        month = request.query_params.get("month")
+
+        data = DashboardService.get_dashboard_data(
+            user=request.user,
+            year=year,
+            month=month
+        )
+
+        return Response(data, status=status.HTTP_200_OK)
+
+
+
+class ReportServices(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+
+        year = request.query_params.get("year")
+        month = request.query_params.get("month")
+
+        data = ReportService.get_report_data(
+            user=request.user,
+            year=year,
+            month=month
+        )
+
+        return Response(data, status=status.HTTP_200_OK) 
