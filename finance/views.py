@@ -38,15 +38,29 @@ class IncomeList(APIView):
         year = request.query_params.get("year")
         month = request.query_params.get("month")
         category = request.query_params.get("category")
+        ordering = request.query_params.get("ordering")
 
         if year:
-            incomes = Income.objects.filter(date__year=year)
+            incomes = incomes.filter(date__year=year)
 
         if month:
-            incomes = Income.objects.filter(date__month=month)
+            incomes = incomes.filter(date__month=month)
 
         if category:
-            incomes = Income.objects.filter(category__name__iexact=category)
+            incomes = incomes.filter(category__name__iexact=category)
+
+        allowed_orderings = [
+            "amount",
+            "-amount",
+            "date",
+            "-date",
+            "created_at",
+            "-created_at",
+        ]
+
+        if ordering in allowed_orderings:
+            incomes = incomes.order_by(ordering)
+        
 
         serializer = IncomeSerializer(incomes, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -107,15 +121,28 @@ class ExpenseList(APIView):
         year = request.query_params.get("year")
         month = request.query_params.get("month")
         category = request.query_params.get("category")
+        ordering = request.query_params.get("ordering")
 
         if year:
-            expenses = Expense.objects.filter(date__year=year)
+            expenses = expenses.filter(date__year=year)
         
         if month:
-            expenses = Expense.objects.filter(date__month=month)
+            expenses = expenses.filter(date__month=month)
 
         if category:
-            expenses = Expense.objects.filter(category__name__iexact=category)
+            expenses = expenses.filter(category__name__iexact=category)
+
+        allowed_orderings = [
+            "amount",
+            "-amount",
+            "date",
+            "-date",
+            "created_at",
+            "-created_at",
+        ]
+
+        if ordering in allowed_orderings:
+            expenses = expenses.order_by(ordering)
 
         serializer = ExpenseSerializer(expenses, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
