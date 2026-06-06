@@ -16,6 +16,15 @@ urlpatterns = [
     path("expense/update/<int:pk>/", views.UpdateExpense.as_view(), name="update-expense"),
     path("expense/delete/<int:pk>/", views.DeleteExpense.as_view(), name="delete-expens"),
 
-    path("dashboard/", views.DashboardServices.as_view(), name="dashboard"),
-    path("repost/", views.ReportServices.as_view(), name="report"),
+    path("budget/add/", views.AddBudgetView.as_view(), name="add-budget"),
+    path("budget/list/", views.BudgetListView.as_view(), name="list-budget"),
+    path("budget/update/<int:pk>/", views.UpdateBudgetView.as_view(), name="update-budget"),
+    path("budget/delete/<int:pk>/", views.DeleteBudgetView.as_view(), name="delete-budget"),
+
+    path("expense/add/", views.AddCategory.as_view(), name="add-expense"),
+    path("expense/delete/<int:pk>/", views.DeleteCategory.as_view(), name="list-expense"),
+
+    path("dashboardservice/", views.DashboardServices.as_view(), name="dashboard-service"),
+    path("repostservice/", views.ReportServices.as_view(), name="report-service"),
+    path("budgetservice/", views.BudgetServices.as_view(), name="budget-service"),
 ]

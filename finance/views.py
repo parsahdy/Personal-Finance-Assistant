@@ -1,13 +1,19 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
 
 from .services.dashboard import DashboardService
 from .services.reports import ReportService
-from .models import Income, Expense
-from .serializers import IncomeSerializer, IncomeDetailSerializer, ExpenseSerializer, ExpenseDetailSerializer
+from .services.budgeting import BudgetService
+from .models import Income, Expense, Budget, Category
+from .serializers import (IncomeSerializer,
+                           IncomeDetailSerializer,
+                           ExpenseSerializer, 
+                           ExpenseDetailSerializer, 
+                           BudgetSerializer,
+                           CategorySerializer)
 
 
 class AddIncome(APIView):
@@ -183,3 +189,91 @@ class ReportServices(APIView):
         )
 
         return Response(data, status=status.HTTP_200_OK) 
+    
+
+class AddBudgetView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        
+        serializer = BudgetSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+class BudgetListView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        
+        budgets = Budget.objects.filter(user=request.user)
+        serializer = BudgetSerializer(budgets, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+
+class UpdateBudgetView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def patch(self, request, pk):
+
+        budget = get_object_or_404(Budget, user=request.user, pk=pk)
+        serializer = BudgetSerializer(budget, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+class DeleteBudgetView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, pk):
+        budget = get_object_or_404(Budget, user=request.user, pk=pk)
+        budget.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
+
+class BudgetServices(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+
+        year = request.query_params.get("year")
+        month = request.query_params.get("month")
+        category = request.query_params.get("category")
+
+        data = BudgetService.get_budget_data(
+            user=request.user,
+            category=category,
+            year=year,
+            month=month,
+        )
+        return Response(data, status=status.HTTP_200_OK)
+    
+class AddCategory(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        serializer = CategorySerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+class DeleteCategory(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, pk):
+        category = get_object_or_404(Category, user=request.user)
+        category.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
