@@ -23,7 +23,17 @@ class IncomeSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         category_name = validated_data.pop("category", None)
-        category, _ = Category.objects.get_or_create(name=category_name)
+        category = None
+
+        if category_name is not None:
+            category_name = category_name.strip()
+
+        if category_name:
+            category, _ = Category.objects.get_or_create(
+                name=category_name,
+                defaults={"category_type": "income"}
+            )
+
         validated_data["category"] = category
         return Income.objects.create(**validated_data)
 
@@ -64,7 +74,17 @@ class ExpenseSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         category_name = validated_data.pop("category", None)
-        category, _ = Category.objects.get_or_create(name=category_name)
+        category = None
+
+        if category_name is not None:
+            category_name = category_name.strip()
+
+        if category_name:
+            category, _ = Category.objects.get_or_create(
+                name=category_name,
+                defaults={"category_type": "expense"}
+            )
+
         validated_data["category"] = category
         return Expense.objects.create(**validated_data)
 
@@ -104,9 +124,19 @@ class BudgetSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         category_name = validated_data.pop("category", None)
-        category, _ = Category.objects.get_or_create(name=category_name)
+        category = None
+
+        if category_name is not None:
+            category_name = category_name.strip()
+
+        if category_name:
+            category, _ = Category.objects.get_or_create(
+                name=category_name,
+                defaults={"category_type": "budget"}
+            )
+
         validated_data["category"] = category
-        return Budget.objects.create(**validated_data)
+        return Income.objects.create(**validated_data)
 
 
 class CategorySerializer(serializers.ModelSerializer):
