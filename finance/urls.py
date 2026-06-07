@@ -32,4 +32,9 @@ urlpatterns = [
     path("export/income/xlsx/", views.ExportIncomeXLSX.as_view()),
     path("export/expense/csv/", views.ExportExpenseCSV.as_view()),
     path("export/expense/xlsx/", views.ExportExpenseXLSX.as_view()),
+
+    path("export/async/income/csv/", views.CeleryIncomeCSV.as_view()),
+    path("export/async/income/xlsx/", views.CeleryIncomeXLSX.as_view()),
+    path("export/async/expense/csv/", views.CeleryExpenseCSV.as_view()),
+    path("export/async/expense/xlsx/", views.CeleryExpenseXLSX.as_view()),
 ]

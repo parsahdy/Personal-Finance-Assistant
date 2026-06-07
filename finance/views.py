@@ -5,6 +5,10 @@ from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
 from django.core.cache import cache
 
+from .tasks import (generate_expense_csv,
+                    generate_income_csv,
+                    generate_expense_xlsx,
+                    generate_income_xlsx)
 from .services.dashboard import DashboardService
 from .services.reports import ReportService
 from .services.budgeting import BudgetService
@@ -399,3 +403,99 @@ class ExportExpenseXLSX(APIView):
             month=month
         )
         return file
+    
+
+class CeleryExpenseCSV(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+
+        year = request.query_params.get("year")
+        month = request.query_params.get("month")
+
+        task = generate_expense_csv.delay(
+            user_id=request.user.id,
+            year=year,
+            month=month
+        )
+        
+        return Response(
+            {
+                "message": "Export task started.",
+                "task_id": task.id
+            },
+            status=status.HTTP_202_ACCEPTED
+        )
+
+
+class CeleryExpenseXLSX(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+
+        year = request.query_params.get("year")
+        month = request.query_params.get("month")
+
+        task = generate_expense_xlsx.delay(
+            user_id=request.user.id,
+            year=year,
+            month=month
+        )
+        
+        return Response(
+            {
+                "message": "Export task started.",
+                "task_id": task.id
+            },
+            status=status.HTTP_202_ACCEPTED
+        )
+
+
+class CeleryIncomeCSV(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+
+        year = request.query_params.get("year")
+        month = request.query_params.get("month")
+
+        task = generate_income_csv.delay(
+            user_id=request.user.id,
+            year=year,
+            month=month
+        )
+        
+        return Response(
+            {
+                "message": "Export task started.",
+                "task_id": task.id
+            },
+            status=status.HTTP_202_ACCEPTED
+        )
+
+
+class CeleryIncomeXLSX(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+
+        year = request.query_params.get("year")
+        month = request.query_params.get("month")
+
+        task = generate_income_xlsx.delay(
+            user_id=request.user.id,
+            year=year,
+            month=month
+        )
+        
+        return Response(
+            {
+                "message": "Export task started.",
+                "task_id": task.id
+            },
+            status=status.HTTP_202_ACCEPTED
+        )
