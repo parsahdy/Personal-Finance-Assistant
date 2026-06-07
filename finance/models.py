@@ -6,12 +6,21 @@ from accounts.models import User
 class CategoryType(models.TextChoices):
     INCOME = "income", "Income"
     EXPENSE = "expense", "Expense"
+    BUDGET = "budget", "Budget"
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=100, unique=True, db_index=True)
+    name = models.CharField(max_length=100, db_index=True)
     category_type = models.CharField(max_length=10, choices=CategoryType.choices)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    class meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["name", "category_type"],
+                name="unique_category_name_type"
+            )
+        ]
 
     def __str__(self):
         return self.name
