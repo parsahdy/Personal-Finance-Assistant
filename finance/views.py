@@ -7,6 +7,7 @@ from django.shortcuts import get_object_or_404
 from .services.dashboard import DashboardService
 from .services.reports import ReportService
 from .services.budgeting import BudgetService
+from .services.export import ExpoertService
 from .models import Income, Expense, Budget, Category
 from .serializers import (IncomeSerializer,
                            IncomeDetailSerializer,
@@ -304,3 +305,77 @@ class DeleteCategory(APIView):
         category = get_object_or_404(Category, user=request.user)
         category.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+
+class ExportIncomeCSV(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+
+        year = request.query_params.get("year")
+        month = request.query_params.get("month")
+
+        file = ExpoertService.export_income_csv(
+            user=request.user,
+            year=year,
+            month=month
+        )
+        return file
+
+
+class ExportExpenseCSV(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+
+        year = request.query_params.get("year")
+        month = request.query_params.get("month")
+
+        file = ExpoertService.export_expense_csv(
+            user=request.user,
+            year=year,
+            month=month
+        )
+        return file
+
+
+class ExportIncomeXLSX(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+
+        year = request.query_params.get("year")
+        month = request.query_params.get("month")
+
+        year = request.query_params.get("year")
+        month = request.query_params.get("month")
+
+        file = ExpoertService.export_income_xlsx(
+            user=request.user,
+            year=year,
+            month=month
+        )
+        return file
+
+
+class ExportExpenseXLSX(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+
+        year = request.query_params.get("year")
+        month = request.query_params.get("month")
+
+        year = request.query_params.get("year")
+        month = request.query_params.get("month")
+
+        file = ExpoertService.export_expense_xlsx(
+            user=request.user,
+            year=year,
+            month=month
+        )
+        return file
