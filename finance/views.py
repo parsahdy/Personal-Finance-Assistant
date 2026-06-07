@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
+from django.core.cache import cache
 
 from .services.dashboard import DashboardService
 from .services.reports import ReportService
@@ -62,7 +63,6 @@ class IncomeList(APIView):
         if ordering in allowed_orderings:
             incomes = incomes.order_by(ordering)
         
-
         serializer = IncomeSerializer(incomes, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -191,14 +191,19 @@ class DashboardServices(APIView):
         year = request.query_params.get("year")
         month = request.query_params.get("month")
 
+        cache_key = f"dashboard-{request.user.id}-{year}-{month}"
+        cache_data = cache.get(cache_key)
+
+        if cache_data is not None:
+            return Response(cache_data, status=status.HTTP_200_OK)
+
         data = DashboardService.get_dashboard_data(
             user=request.user,
             year=year,
             month=month
         )
-
+        cache.set(cache_key, data, timeout=60*5)
         return Response(data, status=status.HTTP_200_OK)
-
 
 
 class ReportServices(APIView):
@@ -210,12 +215,18 @@ class ReportServices(APIView):
         year = request.query_params.get("year")
         month = request.query_params.get("month")
 
+        cache_key = f"report-{request.user.id}-{year}-{month}"
+        cache_data = cache.get(cache_key)
+
+        if cache_data is not None:
+            return Response(cache_data, status=status.HTTP_200_OK)
+
         data = ReportService.get_report_data(
             user=request.user,
             year=year,
             month=month
         )
-
+        cache.set(cache_key, data, timeout=60*5)
         return Response(data, status=status.HTTP_200_OK) 
     
 
@@ -277,14 +288,22 @@ class BudgetServices(APIView):
         month = request.query_params.get("month")
         category = request.query_params.get("category")
 
+        cache_key = f"budget-{request.user.id}-{year}-{month}-{category}"
+        cache_data = cache.get(cache_key)
+
+        if cache_data is not None:
+            return Response(cache_data, status=status.HTTP_200_OK)
+
         data = BudgetService.get_budget_data(
             user=request.user,
             category=category,
             year=year,
             month=month,
         )
+        cache.set(cache_key, data, timeout=60*5)
         return Response(data, status=status.HTTP_200_OK)
     
+
 class AddCategory(APIView):
 
     permission_classes = [IsAuthenticated]
@@ -321,6 +340,7 @@ class ExportIncomeCSV(APIView):
             year=year,
             month=month
         )
+
         return file
 
 

@@ -25,7 +25,7 @@ urlpatterns = [
     path("expense/delete/<int:pk>/", views.DeleteCategory.as_view(), name="list-expense"),
 
     path("dashboardservice/", views.DashboardServices.as_view(), name="dashboard-service"),
-    path("repostservice/", views.ReportServices.as_view(), name="report-service"),
+    path("reportservice/", views.ReportServices.as_view(), name="report-service"),
     path("budgetservice/", views.BudgetServices.as_view(), name="budget-service"),
 
     path("export/income/csv/", views.ExportIncomeCSV.as_view()),
