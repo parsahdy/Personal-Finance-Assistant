@@ -27,4 +27,9 @@ urlpatterns = [
     path("dashboardservice/", views.DashboardServices.as_view(), name="dashboard-service"),
     path("repostservice/", views.ReportServices.as_view(), name="report-service"),
     path("budgetservice/", views.BudgetServices.as_view(), name="budget-service"),
+
+    path("export/income/csv/", views.ExportIncomeCSV.as_view()),
+    path("export/income/xlsx/", views.ExportIncomeXLSX.as_view()),
+    path("export/expense/csv/", views.ExportExpenseCSV.as_view()),
+    path("export/expense/xlsx/", views.ExportExpenseXLSX.as_view()),
 ]
