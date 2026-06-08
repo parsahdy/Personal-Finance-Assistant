@@ -5,4 +5,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include("accounts.urls")),
     path('finance/', include("finance.urls")),
+    path('advisor/', include("advisor.urls")),
 ]
