@@ -1,7 +1,7 @@
-from langchain_community.llms import Ollama
+from langchain_ollama import OllamaLLM
 
 
-llm = Ollama(
+llm = OllamaLLM(
     model="llama3.1",
     base_url="http://localhost:11434"
 )
