@@ -198,6 +198,33 @@ class DashboardService:
     
 
     @staticmethod
+    def get_largest_category(user, year=None, month=None):
+
+        expenses = Expense.objects.filter(user=user)
+
+        if year:
+            expenses = expenses.filter(date__year=year)
+
+        if month:
+            expenses = expenses.filter(date__month=month)
+
+        result = (
+                expenses.values("category__name")
+                .annotate(total_amount=Sum("amount"))
+                .order_by("-total_amount")
+                .first()
+                )   
+            
+        if not result:
+            return None
+
+        return {
+            "category": result["category__name"],
+            "amount": result["total_amount"]
+        }
+    
+
+    @staticmethod
     def get_dashboard_data(user, year=None, month=None):
 
         return {
@@ -208,4 +235,5 @@ class DashboardService:
             "largest_expense": DashboardService.get_lowest_expense(user, year, month),
             "saving_rate": DashboardService.get_saving_rate(user, year, month),
             "expense_income_ratio": DashboardService.get_expense_income_ratio(user, year, month),
+            "get_largest_category": DashboardService.get_largest_category(user, year, month)
         }
