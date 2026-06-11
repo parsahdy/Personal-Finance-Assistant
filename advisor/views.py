@@ -2,29 +2,32 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
+from django.core.cache import cache
 
-from services.financial_analysis import FinancialAnalysisService
+from advisor.services.chat import FinancialChatServices
+from advisor.serializers import QuestionSerializer
 
 
-class FinancialAnalyzeView(APIView):
+class FinancialChatView(APIView):
 
     permission_classes = [IsAuthenticated]
 
-    def get(self, request):
+    def post(self, request):
 
-        year = request.query_params.get("year")
-        month = request.query_params.get("month")
+        serializer = QuestionSerializer(data=request.data)
 
-        try:
-            analysis = FinancialAnalysisService.analyze(
-                user=request.user,
-                year=year,
-                month=month
-            )
-        except Exception as e:
+        if not serializer.is_valid():
             return Response(
-                {"error": str(e)},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                serializer.errors,
+                status=status.HTTP_400_BAD_REQUEST
             )
+        
+        question = serializer.validated_data["question"]
 
-        return Response(analysis, status=status.HTTP_200_OK)
+        result = FinancialChatServices.chat(
+            user=request.user,
+            question=question
+        )
+        return Response ({
+            "answer": result
+        })
