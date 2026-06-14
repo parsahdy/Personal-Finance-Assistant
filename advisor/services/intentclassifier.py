@@ -49,3 +49,40 @@ class IntentClassifier:
             "year": data.get("year"),
             "month": data.get("month")
         }
+
+
+class MLIntentClassifier:
+
+    @staticmethod
+    def mlclassify(question):
+
+        prompt = f"""
+            You are an intent classifier for a financial assistant.
+
+            Avaiable actions:
+            - month_ahead
+            - income
+            - expense
+            - saving
+
+            Rules:
+            - Retturn the main topic between income, expense or saving
+              and also return the period which user wants to be predicted as month_ahead.
+            - Return Only valid JSON.
+
+            Example: {
+                "action": "income",
+                "month_ahead": 12
+            }
+
+            Question: {question}
+        """
+
+        result = OllamaClient.generate(prompt=prompt)
+
+        data = json.loads(result)
+
+        return {
+            "action": data.get("action"),
+            "month_ahead":data.get("month_ahead")
+        }
