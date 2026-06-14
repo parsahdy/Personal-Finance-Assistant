@@ -5,6 +5,7 @@ from rest_framework import status
 from django.core.cache import cache
 
 from advisor.services.chat import FinancialChatServices
+from advisor.ml.predictor import LLMPredictor
 from advisor.serializers import QuestionSerializer
 
 
@@ -22,6 +23,8 @@ class FinancialChatView(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
         
+        serializer.save(user=request.user)
+        
         question = serializer.validated_data["question"]
 
         result = FinancialChatServices.chat(
@@ -29,5 +32,32 @@ class FinancialChatView(APIView):
             question=question
         )
         return Response ({
+            "answer": result
+        })
+    
+
+class FinancialForecastingView(APIView):
+
+    parser_classes = [IsAuthenticated]
+
+    def post(self, request):
+
+        serializer = QuestionSerializer(data=request.data)
+
+        if not serializer.is_valid():
+            return Response(
+                serializer.errors,
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        serializer.save(user=request.user)
+        
+        question = serializer.validated_data["question"]
+
+        result = LLMPredictor.forecast(
+            question=question,
+            user=request.user
+        )
+        return Response({
             "answer": result
         })
