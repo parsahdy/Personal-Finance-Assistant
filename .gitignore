@@ -67,3 +67,5 @@ db.sqlite3
 **/dump.rdb
 
 documents/
+
+chroma_db/
