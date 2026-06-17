@@ -2,12 +2,9 @@ from pathlib import Path
 from langchain_huggingface import HuggingFaceEmbeddings 
 from langchain_chroma import Chroma
 
-from .build_vector_db import build_vectorstore
-
 
 RAG_DIR = Path(__file__).resolve().parent 
 PERSIST_DIR = RAG_DIR / "chroma_db"
-
 
 
 embeddings = HuggingFaceEmbeddings(
