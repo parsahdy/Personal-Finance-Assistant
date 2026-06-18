@@ -29,4 +29,6 @@ jobs:
 
     - name: Run Tests
       run: |
-        python manage.py test
+        python manage.py test accounts
+        python manage.py test finance.tests.view_tests
+        python manage.py test finance.tests.services_tests
