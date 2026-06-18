@@ -14,7 +14,7 @@ urlpatterns = [
     path("expense/list/", views.ExpenseList.as_view(), name="list-expense"),
     path("expense/detail/<int:pk>/", views.ExpenseDetail.as_view(), name="expense-detail"),
     path("expense/update/<int:pk>/", views.UpdateExpense.as_view(), name="update-expense"),
-    path("expense/delete/<int:pk>/", views.DeleteExpense.as_view(), name="delete-expens"),
+    path("expense/delete/<int:pk>/", views.DeleteExpense.as_view(), name="delete-expense"),
 
     path("budget/add/", views.AddBudgetView.as_view(), name="add-budget"),
     path("budget/list/", views.BudgetListView.as_view(), name="list-budget"),
@@ -28,13 +28,13 @@ urlpatterns = [
     path("reportservice/", views.ReportServices.as_view(), name="report-service"),
     path("budgetservice/", views.BudgetServices.as_view(), name="budget-service"),
 
-    path("export/income/csv/", views.ExportIncomeCSV.as_view()),
-    path("export/income/xlsx/", views.ExportIncomeXLSX.as_view()),
-    path("export/expense/csv/", views.ExportExpenseCSV.as_view()),
-    path("export/expense/xlsx/", views.ExportExpenseXLSX.as_view()),
+    path("export/income/csv/", views.ExportIncomeCSV.as_view(), name="income-csv"),
+    path("export/income/xlsx/", views.ExportIncomeXLSX.as_view(), name="income-xlsx"),
+    path("export/expense/csv/", views.ExportExpenseCSV.as_view(), name="expense-csv"),
+    path("export/expense/xlsx/", views.ExportExpenseXLSX.as_view(), name="expense-xlsx"),
 
-    path("export/async/income/csv/", views.CeleryIncomeCSV.as_view()),
-    path("export/async/income/xlsx/", views.CeleryIncomeXLSX.as_view()),
-    path("export/async/expense/csv/", views.CeleryExpenseCSV.as_view()),
-    path("export/async/expense/xlsx/", views.CeleryExpenseXLSX.as_view()),
+    path("export/async/income/csv/", views.CeleryIncomeCSV.as_view(), name="aincome-csv"),
+    path("export/async/income/xlsx/", views.CeleryIncomeXLSX.as_view(), name="aincome-xlsx"),
+    path("export/async/expense/csv/", views.CeleryExpenseCSV.as_view(), name="aexpense-csv"),
+    path("export/async/expense/xlsx/", views.CeleryExpenseXLSX.as_view(), name="aexpense-xlsx"),
 ]
